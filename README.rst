@@ -1,6 +1,10 @@
 Django URL filter
 =================
 
+.. image:: https://travis-ci.org/miki725/django-url-filter.png?branch=develop
+    :target: https://travis-ci.org/miki725/django-url-filter
+    :alt: Build Status
+
 Generic Django filtering system with easy URL interface.
 Useful for APIs such as `Django REST <http://django-rest-framework.org/>`_.
 
@@ -20,6 +24,12 @@ use more sophisticated filters such as ``in`` or ``year``.
 For example::
 
     GET http://example.com/listview/?id__in=1,2,3&created__year=2013
+
+Documentation
+-------------
+
+Documentation can be found at
+`Read The Docs <http://django-url-filter.readthedocs.org/>`_.
 
 Requirements
 ------------
