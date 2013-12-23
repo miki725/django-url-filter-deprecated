@@ -1,0 +1,3 @@
+include *.rst
+recursive-include tests *.sh *.py
+recursive-include docs *.py *.rst

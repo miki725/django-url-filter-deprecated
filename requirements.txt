@@ -1,0 +1,9 @@
+coverage
+django
+django-nose
+djangorestframework
+mock
+tox
+six
+sphinx
+-e git+http://github.com/miki725/django-auxilium@develop#egg=django_auxilium
