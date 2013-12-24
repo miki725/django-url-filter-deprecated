@@ -69,21 +69,14 @@ Example
 -------
 
 Using Django URL Filter with Django REST is just a matter of changing
-the filter backend.
-
-.. note::
-    Django REST has identically named backend - ``DjangoFilterBackend``.
-    This is done on purpose to allow to easily switch to the new backend
-    by just simply switching the imports.
-
-::
+the filter backend::
 
     from django.contrib.auth.models import User
-    from django_url.backend import DjangoFilterBackend
+    from url_filter.backend import URLDjangoFilterBackend
 
     class ListView(generics.ListAPIView):
         model = User
-        filter_backends = (DjangoFilterBackend,)
+        filter_backends = (URLDjangoFilterBackend,)
         filter_fields = ('id', 'email', 'is_active', 'date_joined')
 
 Assuming the previous view is enabled via ``/users/`` url, the following

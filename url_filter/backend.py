@@ -1,9 +1,9 @@
 from __future__ import unicode_literals, print_function
-from rest_framework.filters import DjangoFilterBackend as DefaultFilterBackend
+from rest_framework.filters import DjangoFilterBackend
 from .filterset import FilterSet
 
 
-class DjangoFilterBackend(DefaultFilterBackend):
+class URLDjangoFilterBackend(DjangoFilterBackend):
     """
     Filter Backend for Django REST Framework.
     It is very similar to the default ``DjangoFilterBackend``,
