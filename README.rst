@@ -5,6 +5,10 @@ Django URL filter
     :target: https://travis-ci.org/miki725/django-url-filter
     :alt: Build Status
 
+.. image:: https://d2weczhvl823v0.cloudfront.net/miki725/django-url-filter/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
 Generic Django filtering system with easy URL interface.
 Useful for APIs such as `Django REST <http://django-rest-framework.org/>`_.
 
