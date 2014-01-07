@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, print_function
 from django import forms
+from django.db import models
 from django.db.models.sql.constants import QUERY_TERMS
 from rest_framework.exceptions import ParseError
 from .overwrites import MODEL_FIELD_OVERWRITES, LOOKUP_TYPES_OVERWRITES
@@ -57,6 +58,11 @@ class ModelFieldFilter(object):
         self.key_form_field = self.key_form_field_class(**kwargs)
 
     def get_value_form_field(self, lookup_type):
+        if not isinstance(self.model_field, models.Field):
+            print(self.model_field)
+            raise TypeError('Filter\'s ``model_field`` must be an instance of '
+                            '``models.Field``.')
+
         field = self.model_field.formfield()
 
         # model field overwrite

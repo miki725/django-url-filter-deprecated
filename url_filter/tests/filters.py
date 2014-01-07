@@ -1,4 +1,5 @@
 from __future__ import unicode_literals, print_function
+from django.db import models
 from django.test import TestCase
 from mock import MagicMock, patch
 from random import randint
@@ -63,14 +64,13 @@ class TestModelFieldFilter(TestCase):
 
     def test_get_value_form_field(self):
         # no mfo and no lto
-        # --------------
-        class Foo(object):
+        # -----------------
+        class Foo(models.Field):
             pass
 
         formfield = MagicMock()
-        model = MagicMock()
+        model = MagicMock(spec=Foo)
         model.formfield.return_value = formfield
-        model.__class__ = Foo
         m = ModelFieldFilter(model)
         _mfo = MagicMock()
         _mfo.get.return_value = None

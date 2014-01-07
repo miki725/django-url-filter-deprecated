@@ -5,6 +5,7 @@ from django.db import models
 from django.test import TestCase
 from mock import MagicMock, patch
 from random import randint
+from url_filter import ModelFieldFilter
 from url_filter.filterset import (FilterSetOptions,
                                   FilterSetMeta,
                                   BaseFilterSet,
@@ -26,58 +27,73 @@ class TestFilterSetOptions(TestCase):
 
 
 class TestFilterSetMeta(TestCase):
-    def test_new(self):
-        model = randint(1, 100)
-        d1 = randint(1, 100)
-        d2 = randint(1, 100)
-
-        issub = MagicMock()
-        issub.return_value = True
+    def test_new_itself(self):
         declared_filters = MagicMock()
-        declared_filters.return_value = {
-            'foo': d1,
-        }
+        declared_filters.return_value = {}
         filters_model = MagicMock()
-        filters_model.return_value = filters_model
-        filters_model.update.return_value = {
-            'foo': d1,
-            'bar': d2,
-        }
 
         opts = MagicMock()
-        opts.model = randint
         opts.side_effect = lambda *a, **k: FilterSetOptions(*a, **k)
 
         with patch.multiple('url_filter.filterset',
                             get_declared_filters=declared_filters,
                             filters_for_model=filters_model,
                             FilterSetOptions=opts):
-            meta = type(str('Meta'), (object,), {'model': model})
+            meta = type(str('Meta'), (object,), {})
             fs = FilterSetMeta(str('FilterSet'), (object,), {'Meta': meta})
             declared_filters.assert_called_with((object,), {'Meta': meta})
             self.assertFalse(opts.called)
             self.assertFalse(hasattr(fs, 'base_filters'))
 
-        with patch.multiple('url_filter.filterset',
-                            get_declared_filters=declared_filters,
-                            filters_for_model=filters_model,
-                            FilterSetOptions=opts):
-            if six.PY2:
-                built = '__builtin__'
-            else:
-                built = 'builtins'
-            with patch('{0}.issubclass'.format(built), issub):
-                meta = type(str('Meta'), (object,), {})
-                fs = FilterSetMeta(str('FilterSet'), (object,), {'Meta': meta})
-                opts.assert_called_with(meta)
-                self.assertFalse(filters_model.called)
-                self.assertEqual(fs.base_filters, {'foo': d1})
+    def test_new_subclass(self):
+        # ----------
+        # empty
+        class FS(FilterSet):
+            pass
 
-                meta = type(str('Meta'), (object,), {'model': model})
-                fs = FilterSetMeta(str('FilterSet'), (object,), {'Meta': meta})
-                filters_model.assert_called_with(model, None, None)
-                filters_model.update.assert_called_with({'foo': d1})
-                self.assertEqual(fs.base_filters, filters_model)
+        self.assertTrue(hasattr(FS, 'base_filters'))
+        self.assertIsInstance(FS._meta, FilterSetOptions)
+
+        # ----------
+        # model not specified
+        with self.assertRaises(ValueError):
+            class FS(FilterSet):
+                foo = ModelFieldFilter('<nobody here>')
+
+        # ----------
+        # model provided
+        class FooModel(models.Model):
+            foo = models.CharField(max_length=16)
+            bar = models.TextField(null=True)
+
+            class Meta(object):
+                app_label = 'filters'
+
+        class FS(FilterSet):
+            class Meta(object):
+                model = FooModel
+
+        self.assertEqual(list(FS.base_filters.keys()), ['id', 'foo', 'bar'])
+
+        # ----------
+        # filters from inheritance
+        class FS2(FS):
+            cat = ModelFieldFilter(models.IntegerField())
+
+        self.assertEqual(list(FS2.base_filters.keys()), ['id', 'foo', 'bar', 'cat'])
+
+        # ----------
+        # filters overwrite
+        over = ModelFieldFilter('foo')
+
+        class FS(FilterSet):
+            foo = over
+
+            class Meta(object):
+                model = FooModel
+
+        self.assertEqual(list(FS.base_filters.keys()), ['id', 'foo', 'bar'])
+        self.assertIs(FS.base_filters['foo'], over)
 
 
 class TestBaseFilterSet(TestCase):

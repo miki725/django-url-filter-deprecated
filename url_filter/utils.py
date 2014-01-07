@@ -1,4 +1,5 @@
 from __future__ import unicode_literals, print_function
+import six
 try:
     from collections import OrderedDict
 except ImportError:
@@ -53,7 +54,7 @@ def get_declared_filters(bases, attrs):
     This also return filters from the base classes.
     """
     filters = []
-    for filter_name, filter in attrs.items():
+    for filter_name, filter in list(attrs.items()):
         if not isinstance(filter, ModelFieldFilter):
             continue
         filter = attrs.pop(filter_name)

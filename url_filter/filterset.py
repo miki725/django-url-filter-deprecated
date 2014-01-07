@@ -36,6 +36,16 @@ class FilterSetMeta(type):
         else:
             filters = declared_filters
 
+        # make sure filters ``model_field`` is instance of ``models.Field``
+        for f in filters.values():
+            if isinstance(f.model_field, six.string_types):
+                if not opts.model:
+                    raise ValueError(
+                        '``model`` was not defined in filterset\'s ``Meta`` hence '
+                        'for filter `{0}`, model field cannot be determined.'
+                        ''.format(f.model_field))
+                f.model_field = opts.model._meta.get_field_by_name(f.model_field)
+
         new_class.base_filters = filters
 
         return new_class
