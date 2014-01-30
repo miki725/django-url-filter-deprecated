@@ -19,7 +19,7 @@ The main goal of Django URL Filter is to provide an easy URL interface
 for filtering querysets. It allows the user to safely filter by model
 attributes and also allows to specify the lookup type for each filter
 (very much like Django's filtering system). For example the following
-will retrieve all items where id is 5 and title will contain ``"foo"``::
+will retrieve all items where the id is ``5`` and title contains ``"foo"``::
 
     GET http://example.com/listview/?id=5&title__contains=foo
 
@@ -45,29 +45,12 @@ Requirements
 Installing
 ----------
 
-Since this package is still in development (hence is not considered
-safe), you can't use ``pip`` to install it (yet).
-You can install it from source or directly from GitHub::
+Since this package is still in development, no stable version has been
+uploaded to PYPI yet. You can however install it as a
+`developer <http://github.com/miki725/django-url-filter/archive/develop.tar.gz#egg=django_url_filter-dev>`_
+version::
 
-    $ pip install -e git+http://github.com/miki725/django-url-filter@develop#egg=django_url_filter
-
-That should install all requirements except
-`django-auxilium <https://github.com/miki725/django-auxilium>`_ since
-it is also not yet installable via ``pip``. You can install it manually
-using either ``pip -e``::
-
-    $ pip install -e git+http://github.com/miki725/django-auxilium@develop#egg=django_auxilium
-
-or install it from ``requirements.txt``
-
-.. note::
-    This will also install other dev requirements such as ``mock``
-
-::
-
-    $ git clone https://github.com/miki725/django-url-filter.git
-    $ cd django-url-filter
-    $ pip install -r requirements.txt
+    $ pip install django-url-filter==dev
 
 Example
 -------

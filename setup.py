@@ -96,6 +96,7 @@ setup(
     install_requires = [
         'django',
         'djangorestframework',
+        'django-auxilium==dev',
     ],
     classifiers = [
         "Development Status :: 3 - Alpha",
@@ -103,7 +104,9 @@ setup(
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         "Topic :: Utilities",
+        'Topic :: Internet :: WWW/HTTP',
         "License :: OSI Approved :: MIT License",
     ],
 )
